@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparação de Planilhas - Alugue Tudo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin-top: 50px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 180px;
+        }
+        .btn-primary {
+            width: 100%;
+            background-color: #ff6600;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #e65c00;
+        }
+        .table {
+            margin-top: 20px;
+        }
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .bold-center {
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+        }
+        h2 {
+            margin-top: 30px;
+        }
+    </style>
+    <script>
+        function toggleRow(checkbox) {
+            let row = checkbox.closest("tr");
+            if (checkbox.checked) {
+                row.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Alugue Tudo">
+        </div>
+        <h2 class="text-center text-primary">Comparação de Patrimônios</h2>
+        <form action="/" method="POST" enctype="multipart/form-data" class="mt-4">
+            <div class="mb-3">
+                <label for="file" class="form-label">Envie os arquivos Excel:</label>
+                <input type="file" name="file" id="file" multiple class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Comparar</button>
+        </form>
+        
+        {% if resultados %}
+        <h3 class="mt-5 text-center">Patrimônios Repetidos:</h3>
+        <table class="table table-striped table-bordered mt-3 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>✔</th>
+                    <th>Número Patrimônio</th>
+                    <th>Localizações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in resultados %}
+                <tr>
+                    <td><input type="checkbox" onclick="toggleRow(this)"></td>
+                    <td class="bold-center">{{ item['Número Patrimônio'] }}</td>
+                    <td>
+                        {% for loc in item['Localizações'] %}
+                            <strong>Arquivo:</strong> {{ loc[0] }}, <strong>Aba:</strong> {{ loc[1] }}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
